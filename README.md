@@ -1,5 +1,5 @@
 # PV056_project
-Before running project.ipynb run this:
+This is how you can install neccessary dependencies
 ```
 $ mkdir PV056
 $ cd PV056
@@ -12,3 +12,4 @@ $ python3 -m venv venv
 $ source venv/bin/activate
 $ pip install -r requirements.txt
 ```
+Now you can run PV056/project/project.ipynb
