@@ -1,6 +1,9 @@
-# import of auto-sklearn version that supports SMOTE, source has to be downloaded localy
-# modify the path so that it points to the "/auto-sklearn/autosklearn" folder
-# you may encounter some problems with requirements.txt and automl_common
+# NOTE: Import of auto-sklearn version that supports SMOTE, source has to be 
+# downloaded localy. Modify the path so that it points to the 
+# "/auto-sklearn/autosklearn" folder. You may encounter some problems with 
+# requirements.txt and automl_common. Just make sure that they are downloaded
+# and you can open them.
+
 if True:
     import sys
     sys.path.insert(0, "../my_autosklearn")
