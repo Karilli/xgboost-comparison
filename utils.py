@@ -30,6 +30,7 @@ import shutil
 import json
 import os
 import pickle
+import numpy as np
 
 
 # NOTE: auto-sklearn might die because it doesnt have enough
