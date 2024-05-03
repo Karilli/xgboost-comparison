@@ -22,7 +22,7 @@ import autosklearn.pipeline.components.classification
 
 
 from autosklearn.classification import AutoSklearnClassifier
-from autosklearn.metrics import roc_auc, f1
+from autosklearn.metrics import roc_auc
 
 from sklearn.model_selection import StratifiedKFold
 from os.path import exists
@@ -165,7 +165,6 @@ def stop_after_100_configurations_callback(smbo, run_info, result, time_left):
 
 def get_AutoSklearnClassifier(X, y, task):
     if task == Task.DATA_IMBALANCE:
-        metric=[roc_auc]
         include={
             "data_preprocessor": ["feature_type"],
             "balancing": ["none", "weighting", "SVMSMOTE", "ADASYN", "SMOTETomek", "SMOTEENN", "BorderlineSMOTE", ],
@@ -173,7 +172,6 @@ def get_AutoSklearnClassifier(X, y, task):
             "classifier": ["XGBClassifier_"]
         }
     elif task == Task.INADEQUATE_FEATURES:
-        metric=[f1]
         include={
             "data_preprocessor": ["feature_type"],
             "balancing": ["none"],
@@ -187,7 +185,7 @@ def get_AutoSklearnClassifier(X, y, task):
 
     return AutoSklearnClassifier(
         time_left_for_this_task=TIME,
-        metric=metric,
+        metric=[roc_auc],
         initial_configurations_via_metalearning=0,
         ensemble_class=None,
         include=include,
