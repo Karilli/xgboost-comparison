@@ -67,6 +67,12 @@ class LearnerType(Enum):
     REGRESSION = 2
 
 
+def sorted_class_count(y):
+    (l1, l2), (c1, c2) = np.unique(y, return_counts=True)
+    (c1, l1), (c2, l2) = sorted(((c1, l1), (c2, l2)))
+    return c1, c2
+
+
 def get_XGBModel(X, y, base_learner, task):
     m = X.shape[1]
 
