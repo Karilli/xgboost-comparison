@@ -109,9 +109,11 @@ class XGBClassifier_(AutoSklearnClassificationAlgorithm):
             setattr(self, key, val)
 
     def fit(self, X, y, sample_weight=None):
-        # NOTE: use this assert to validate if weighting turned on
-        # for xgboost
+        # NOTE: use this assert to validate if weighting is turned on
+        # for xgboost, u will see crashed status for configurations 
+        # with "balancing:strategy": "weighting"
         # assert sample_weight is None
+
         self.estimator = get_XGBModel(
             X, y, Params.BASE_LEARNER, LearnerType.CLASSIFICATION
         ).fit(X, y, sample_weight=sample_weight)
