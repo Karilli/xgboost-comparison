@@ -6,13 +6,14 @@
 
 if True:
     import sys
-    sys.path.insert(0, "../my_autosklearn")
+    sys.path.insert(0, "/content/my_autosklearn/auto-sklearn")
 
 
 from enum import Enum
 from math import floor, sqrt
 from xgboost import XGBClassifier, XGBRFRegressor
-from autosklearn.pipeline.components.base import AutoSklearnClassificationAlgorithm
+
+from autosklearn.pipeline.components.base import AutoSklearnClassificationAlgorithm 
 
 from autosklearn.pipeline.constants import SPARSE, DENSE, UNSIGNED_DATA, INPUT
 from ConfigSpace.configuration_space import ConfigurationSpace
@@ -23,6 +24,16 @@ import autosklearn.pipeline.components.classification
 
 from autosklearn.classification import AutoSklearnClassifier
 from autosklearn.metrics import roc_auc
+
+
+
+import inspect
+function_file = inspect.getfile(AutoSklearnClassificationAlgorithm)
+function_line = inspect.getsourcelines(AutoSklearnClassificationAlgorithm)[1]
+
+print(f"The 'AutoSklearnClassificationAlgorithm' function is defined in: {function_file}, at line {function_line}")
+
+
 
 from sklearn.model_selection import StratifiedKFold
 from os.path import exists
@@ -39,21 +50,21 @@ import numpy as np
 # to enable weights for xgboost. Make sure that "XGBClassifier_"
 # is in the list 'clf_' on line 253 in file
 # autosklearn/pipeline/compoenents/data_preprocessing/balancing/__init__.py
-TIME = 60 * 60
-TIME_PER_RUN = 5 * 60
-MEM = 3000
+TIME = 15 * 60
+TIME_PER_RUN = 40
+MEM = 12000
 
 
 class Params:
     BASE_LEARNER = "RF"
     SEED = 0
     K_FOLDS = 5
-    VALIDATE = False
 
 
-TEMP = "../temp_folder"
-VALIDATION_DIR = "../results/validation"
-MODELS_DIR = "../results/models"
+
+TEMP = "/content/temp_folder"
+VALIDATION_DIR = "/content/results/validation"
+MODELS_DIR = "/content/results/models"
 
 
 class Task(Enum):
@@ -159,8 +170,12 @@ class XGBClassifier_(AutoSklearnClassificationAlgorithm):
         return ConfigurationSpace()
 
 
-def stop_after_100_configurations_callback(smbo, run_info, result, time_left):
-    return sum("SUCCESS" in str(val.status) for val in smbo.runhistory.data.values()) <= 100
+def callback(smbo, run_info, result, time_left):
+    total_sum = sum(
+        "SUCCESS" in str(val.status) 
+        for val in smbo.runhistory.data.values()
+    )
+    return total_sum <= 100 and 0.01 < result.cost
 
 
 def get_AutoSklearnClassifier(X, y, task):
@@ -171,7 +186,7 @@ def get_AutoSklearnClassifier(X, y, task):
             "feature_preprocessor": ["no_preprocessing"],
             "classifier": ["XGBClassifier_"]
         }
-    elif task == Task.INADEQUATE_FEATURES:
+    elif task == Task.FEATURE_INADEQUACY:
         include={
             "data_preprocessor": ["feature_type"],
             "balancing": ["none"],
@@ -193,9 +208,9 @@ def get_AutoSklearnClassifier(X, y, task):
         seed=Params.SEED,
         tmp_folder=TEMP,
         delete_tmp_folder_after_terminate=False,
-        n_jobs=1,
+        n_jobs=-1,
         memory_limit=MEM,
-        get_trials_callback=stop_after_100_configurations_callback,
+        get_trials_callback=callback,
         per_run_time_limit=TIME_PER_RUN,
     ).fit(X, y)
 
