@@ -1,16 +1,10 @@
-# Install auto-sklearn with resampler interface
-Follow the instructions in [here](https://github.com/Karilli/auto-sklearn/blob/development/INSTALL.md).
-
-# 
-This is how you can install neccessary dependencies.
-To run this project you must have linux OS (requirement 
-of auto-sklearn).
+# Install guide
 
 ```
 $ mkdir PV056
 $ cd PV056
 ```
-install auto-sklearn here
+Follow the instructions in [here](https://github.com/Karilli/auto-sklearn/blob/development/INSTALL.md) to install auto-sklearn with resampler interface.
 ```
 $ git clone https://github.com/Karilli/PV056_project.git
 $ python3 -m venv venv
